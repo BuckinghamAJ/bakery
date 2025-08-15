@@ -7,8 +7,9 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"buckingham_bakery/cmd/web"
-	"github.com/a-h/templ"
 	"io/fs"
+
+	"github.com/a-h/templ"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {

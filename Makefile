@@ -17,15 +17,17 @@ templ-install:
 		fi; \
 	fi
 tailwind-install:
-	
+
 	@if [ ! -f tailwindcss ]; then curl -sL https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-macos-x64 -o tailwindcss; fi
 	@chmod +x tailwindcss
+
 
 build: tailwind-install templ-install
 	@echo "Building..."
 	@templ generate
 	@./tailwindcss -i cmd/web/styles/input.css -o cmd/web/assets/css/output.css
-	@CGO_ENABLED=1 GOOS=linux go build -o main cmd/api/main.go
+	@go clean -cache
+	@go build -o main cmd/api/main.go
 
 # Run the application
 run:
