@@ -9,8 +9,29 @@ import (
 	"buckingham_bakery/cmd/web"
 	"io/fs"
 
+	. "buckingham_bakery/cmd/web/templates"
+	. "buckingham_bakery/internal/dto"
+
 	"github.com/a-h/templ"
 )
+
+var orders = []FoodOrder{
+	{
+		Name:    "Sourdough Bread",
+		Cost:    4.50,
+		ImgPath: "cmd/web/assets/img/Sourdough-Bread.jpg",
+	},
+	{
+		Name:    "Chocolate Croissant",
+		Cost:    3.25,
+		ImgPath: "cmd/web/assets/img/chocolate-croissants.jpg",
+	},
+	{
+		Name:    "Croissant",
+		Cost:    3.00,
+		ImgPath: "cmd/web/assets/img/croissants_featured.webp",
+	},
+}
 
 func (s *Server) RegisterRoutes() http.Handler {
 	r := gin.Default()
@@ -30,11 +51,15 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.StaticFS("/assets", http.FS(staticFiles))
 
 	r.GET("/web", func(c *gin.Context) {
-		templ.Handler(web.HelloForm()).ServeHTTP(c.Writer, c.Request)
+		templ.Handler(HelloForm()).ServeHTTP(c.Writer, c.Request)
+	})
+
+	r.GET("/test", func(c *gin.Context) {
+		templ.Handler(Orders(orders)).ServeHTTP(c.Writer, c.Request)
 	})
 
 	r.POST("/hello", func(c *gin.Context) {
-		web.HelloWebHandler(c.Writer, c.Request)
+		HelloWebHandler(c.Writer, c.Request)
 	})
 
 	return r

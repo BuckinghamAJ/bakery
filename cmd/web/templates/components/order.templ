@@ -1,0 +1,21 @@
+package web
+
+import . "buckingham_bakery/internal/dto"
+
+templ Order(order FoodOrder) {
+	<div class="card lg:card-side bg-base-100 shadow-sm">
+		<figure>
+			<img
+				src={ order.ImgPath }
+				alt={ order.Name }
+			/>
+		</figure>
+		<div class="card-body">
+			<h2 class="card-title">{ order.ImgPath }</h2>
+			<h3>{ order.Cost }</h3>
+			<div class="card-actions justify-end">
+				<button class="btn btn-primary">Add to Cart</button>
+			</div>
+		</div>
+	</div>
+}

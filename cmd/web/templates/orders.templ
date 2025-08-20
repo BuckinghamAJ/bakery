@@ -1,11 +1,12 @@
 package web
 
-type FoodOrder struct{
-	nam
-}
+import . "buckingham_bakery/internal/dto"
+import . "buckingham_bakery/cmd/web/templates/components"
 
-templ Orders() {
+templ Orders(orders []FoodOrder) {
 	@Base() {
-
+		for _, order := range orders {
+			@Order(order)
+		}
 	}
 }

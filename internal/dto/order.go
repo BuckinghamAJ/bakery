@@ -1,7 +1,7 @@
 package dto
 
 type FoodOrder struct {
-	name    string
-	cost    float64
-	imgPath string
+	Name    string
+	Cost    float64
+	ImgPath string
 }
