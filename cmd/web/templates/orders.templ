@@ -5,8 +5,10 @@ import . "buckingham_bakery/cmd/web/templates/components"
 
 templ Orders(orders []FoodOrder) {
 	@Base() {
-		for _, order := range orders {
-			@Order(order)
-		}
+		<div>
+			for _, order := range orders {
+				@Order(order)
+			}
+		</div>
 	}
 }

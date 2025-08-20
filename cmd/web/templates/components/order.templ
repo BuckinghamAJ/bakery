@@ -1,9 +1,11 @@
 package web
 
+import "fmt"
+
 import . "buckingham_bakery/internal/dto"
 
 templ Order(order FoodOrder) {
-	<div class="card lg:card-side bg-base-100 shadow-sm">
+	<div class="card lg:card-side bg-base-100 shadow-sm mb-2 px-1 w-full">
 		<figure>
 			<img
 				src={ order.ImgPath }
@@ -11,8 +13,9 @@ templ Order(order FoodOrder) {
 			/>
 		</figure>
 		<div class="card-body">
-			<h2 class="card-title">{ order.ImgPath }</h2>
-			<h3>{ order.Cost }</h3>
+			<h2 class="card-title">{ order.Name }</h2>
+			<h3>${ fmt.Sprintf("%.2f", order.Cost) }</h3>
+			<p>{ order.Description }</p>
 			<div class="card-actions justify-end">
 				<button class="btn btn-primary">Add to Cart</button>
 			</div>
