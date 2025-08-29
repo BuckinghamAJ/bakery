@@ -2,11 +2,13 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	_ "github.com/joho/godotenv/autoload"
 
 	"buckingham_bakery/internal/database"
@@ -20,6 +22,9 @@ type Server struct {
 
 func NewServer() *http.Server {
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
+
+	log.SetOutput(gin.DefaultWriter)
+
 	NewServer := &Server{
 		port: port,
 

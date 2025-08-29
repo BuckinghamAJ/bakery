@@ -1,12 +1,12 @@
 package web
 
-import "fmt"
+import "strconv"
 
 import . "buckingham_bakery/internal/dto"
 
 templ Order(order FoodOrder) {
-	<div class="card lg:card-side bg-base-100 shadow-sm mb-2 px-1 w-full">
-		<figure>
+	<div class="card lg:card-side bg-base-100 shadow-sm mb-2 px-1 w-full min-h-80">
+		<figure class="min-w-80 max-w-80">
 			<img
 				src={ order.ImgPath }
 				alt={ order.Name }
@@ -14,10 +14,15 @@ templ Order(order FoodOrder) {
 		</figure>
 		<div class="card-body">
 			<h2 class="card-title">{ order.Name }</h2>
-			<h3>${ fmt.Sprintf("%.2f", order.Cost) }</h3>
+			<h3>{ order.FormatCost() }</h3>
 			<p>{ order.Description }</p>
 			<div class="card-actions justify-end">
-				<button class="btn btn-primary">Add to Cart</button>
+				<button
+					hx-put={ "/cart/" + strconv.Itoa(order.Id) }
+					hx-target="#cart-dropdown"
+					hx-swap="innerHTML"
+					class="btn btn-primary"
+				>Add to Cart</button>
 			</div>
 		</div>
 	</div>
