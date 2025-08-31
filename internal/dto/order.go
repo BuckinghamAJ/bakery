@@ -20,6 +20,39 @@ func (fo FoodOrder) doesIdMatch(id int) bool {
 	return id == fo.Id
 }
 
+type CondensedOrder struct {
+	Amount int
+	Order  FoodOrder
+}
+
+func (co CondensedOrder) totalSingleOrderCost() float64 {
+	return float64(co.Amount) * co.Order.Cost
+}
+
+func (co CondensedOrder) FormatSingleOrderCost() string {
+	return fmt.Sprintf("$%.2f", co.totalSingleOrderCost())
+}
+
+type ViewCartOrders struct {
+	Orders map[int]CondensedOrder
+}
+
+func (vco ViewCartOrders) calculateTotalCost() float64 {
+	var total float64 = 0
+	for _, order := range vco.Orders {
+		total += order.totalSingleOrderCost()
+	}
+	return total
+}
+
+func (vco ViewCartOrders) FormatTotalOrderCost() string {
+	return fmt.Sprintf("$%.2f", vco.calculateTotalCost())
+}
+
+var CondensedOrders = &ViewCartOrders{
+	Orders: map[int]CondensedOrder{},
+}
+
 type OrderInCart struct {
 	Orders    []FoodOrder
 	TotalCost float64
@@ -28,6 +61,15 @@ type OrderInCart struct {
 func (oic *OrderInCart) AddToCart(order FoodOrder) {
 	oic.Orders = append(oic.Orders, order)
 	oic.TotalCost += order.Cost
+
+	if entry, ok := CondensedOrders.Orders[order.Id]; ok {
+		entry.Amount += 1
+	} else {
+		CondensedOrders.Orders[order.Id] = CondensedOrder{
+			Amount: 1,
+			Order:  order,
+		}
+	}
 }
 
 func (oic OrderInCart) calculateTotalCost() float64 {
@@ -43,30 +85,16 @@ func (oic OrderInCart) DisplayTotalCost() string {
 }
 
 func (oic OrderInCart) Condensed() *ViewCartOrders {
-	// Does it make more sense to do a hash?
-	condensedOrders := &ViewCartOrders{
-		orders: map[int]CondensedOrder{},
-	}
-
 	for _, order := range oic.Orders {
-		if entry, ok := condensedOrders.orders[order.Id]; ok {
-			entry.amount += 1
+		if entry, ok := CondensedOrders.Orders[order.Id]; ok {
+			entry.Amount += 1
 		}
 
-		condensedOrders.orders[order.Id] = CondensedOrder{
-			amount: 1,
-			order:  order,
+		CondensedOrders.Orders[order.Id] = CondensedOrder{
+			Amount: 1,
+			Order:  order,
 		}
 	}
 
-	return condensedOrders
-}
-
-type CondensedOrder struct {
-	amount int
-	order  FoodOrder
-}
-
-type ViewCartOrders struct {
-	orders map[int]CondensedOrder
+	return CondensedOrders
 }

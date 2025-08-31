@@ -5,7 +5,7 @@ import . "buckingham_bakery/cmd/web/templates/components"
 
 templ Orders(orders []FoodOrder) {
 	@Base() {
-		<div>
+		<div class="flex flex-wrap gap-4 columns-3 h-full">
 			for _, order := range orders {
 				@Order(order)
 			}
