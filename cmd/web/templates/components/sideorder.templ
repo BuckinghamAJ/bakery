@@ -1,7 +1,6 @@
 package web
 
 import "buckingham_bakery/internal/dto"
-import func() string
 
 templ SideOrder(item *dto.CondensedOrder) {
 	<div class="card card-side bg-base-100 shadow-sm">
@@ -15,7 +14,7 @@ templ SideOrder(item *dto.CondensedOrder) {
 			<h2 class="card-title">{ item.Order.Name } </h2>
 			<p class="text-sm text-gray-400">{ item.Order.FormatCost() }</p>
 			<div class="card-actions justify-end">
-				<p class="text-md text-gray-700">{item.FormatSingleOrderCost()}</p>
+				<p class="text-md text-gray-700">{ item.FormatSingleOrderCost() }</p>
 			</div>
 		</div>
 	</div>
