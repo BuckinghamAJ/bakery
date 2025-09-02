@@ -7,3 +7,12 @@
 @plugin "./daisyui-theme.js" {
     /* custom theme here */
 }
+
+.show-side-cart {
+    z-index: 99 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    grid-column-start: 2 !important;
+    justify-items: end !important;
+    pointer-events: auto !important;
+}

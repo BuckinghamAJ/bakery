@@ -64,12 +64,16 @@ func (oic *OrderInCart) AddToCart(order FoodOrder) {
 
 	if entry, ok := CondensedOrders.Orders[order.Id]; ok {
 		entry.Amount += 1
+		CondensedOrders.Orders[order.Id] = entry
 	} else {
 		CondensedOrders.Orders[order.Id] = CondensedOrder{
 			Amount: 1,
 			Order:  order,
 		}
 	}
+
+	// fmt.Printf("Condensed Orders: %+v\n", CondensedOrders)
+
 }
 
 func (oic OrderInCart) calculateTotalCost() float64 {

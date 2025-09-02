@@ -63,6 +63,10 @@ func (s *Server) RegisterRoutes() http.Handler {
 		templ.Handler(Orders(orders)).ServeHTTP(c.Writer, c.Request)
 	})
 
+	r.GET("/sidecart", func(c *gin.Context) {
+		GetSideCartOrders(c.Writer, c.Request)
+	})
+
 	r.POST("/hello", func(c *gin.Context) {
 		HelloWebHandler(c.Writer, c.Request)
 	})

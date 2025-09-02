@@ -1,14 +1,19 @@
 package web
 
-import "buckingham_bakery/internal/dto"
-
 templ SideCart() {
-	<div class="drawer-side">
-		<label for="my-drawer-4" aria-label="close sidebar" class="drawer-overlay"></label>
-		<ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
-			for _, item := range dto.CondensedOrders.Orders {
-				@SideOrder(&item)
-			}
+	<div x-show="sideCartOpen" x-transition class="drawer-side" :class="sideCartOpen && 'show-side-cart'">
+		<label class="drawer-overlay"></label>
+		<button style="translate: 0;" class="btn btn-square btn-ghost absolute top-4 right-6 z-[inherit] transition-none!" @click="toggleSideCart()">
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+			</svg>
+		</button>
+		<ul
+			id="sidecart-orders"
+			:style="sideCartOpen && { translate: 0 }"
+			class="menu bg-base-200 text-base-content min-h-full w-96 p-4"
+		>
+			@SideCartOrderList()
 		</ul>
 	</div>
 }

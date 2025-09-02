@@ -9,7 +9,11 @@ templ NavBar() {
 			<a class="btn btn-ghost text-xl">Buckingham Bakery</a>
 		</div>
 		<div class="navbar-end">
-			<div id="cart-dropdown" class="dropdown dropdown-end">
+			<div
+				@click="toggleSideCart()"
+				id="cart-dropdown"
+				class="dropdown dropdown-end"
+			>
 				@Cart()
 			</div>
 		</div>
