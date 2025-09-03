@@ -55,20 +55,12 @@ func (s *Server) RegisterRoutes() http.Handler {
 	staticFiles, _ := fs.Sub(web.Files, "assets")
 	r.StaticFS("/assets", http.FS(staticFiles))
 
-	r.GET("/web", func(c *gin.Context) {
-		templ.Handler(HelloForm()).ServeHTTP(c.Writer, c.Request)
-	})
-
 	r.GET("/", func(c *gin.Context) {
 		templ.Handler(Orders(orders)).ServeHTTP(c.Writer, c.Request)
 	})
 
 	r.GET("/sidecart", func(c *gin.Context) {
 		GetSideCartOrders(c.Writer, c.Request)
-	})
-
-	r.POST("/hello", func(c *gin.Context) {
-		HelloWebHandler(c.Writer, c.Request)
 	})
 
 	r.PUT("/cart/:id", func(c *gin.Context) {
@@ -83,13 +75,6 @@ func (s *Server) RegisterRoutes() http.Handler {
 	})
 
 	return r
-}
-
-func (s *Server) HelloWorldHandler(c *gin.Context) {
-	resp := make(map[string]string)
-	resp["message"] = "Hello World"
-
-	c.JSON(http.StatusOK, resp)
 }
 
 func (s *Server) healthHandler(c *gin.Context) {

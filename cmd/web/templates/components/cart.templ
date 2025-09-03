@@ -1,38 +1,99 @@
 package web
 
 import "buckingham_bakery/internal/dto"
+import "buckingham_bakery/cmd/web/templates/shared"
 
 var OrdersInCart dto.OrderInCart = dto.OrderInCart{
 	Orders:    make([]dto.FoodOrder, 0),
 	TotalCost: 0,
 }
 
-templ Cart() {
+templ NavCart() {
 	{{ numOfItems := len(OrdersInCart.Orders) }}
 	<div
-		id="cart"
-		tabindex="0"
-		role="button"
-		class="btn btn-ghost btn-circle"
+		@click="toggleSideCart()"
+		id="cart-dropdown"
+		class="dropdown dropdown-end"
 	>
-		<div class="indicator">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				class="h-5 w-5"
-				fill="none"
-				viewBox="0 0 24 24"
-				stroke="currentColor"
-			>
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-				></path>
+		<div
+			id="cart"
+			tabindex="0"
+			role="button"
+			class="btn btn-ghost btn-circle"
+		>
+			<div class="indicator">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-5 w-5"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+					></path>
+				</svg>
+				if numOfItems > 0 {
+					<span class="badge badge-sm indicator-item">{ numOfItems }</span>
+				}
+			</div>
+		</div>
+	</div>
+}
+
+templ SideCart() {
+	<div x-show="sideCartOpen" x-transition class="drawer-side" :class="sideCartOpen && 'show-side-cart'">
+		<label class="drawer-overlay"></label>
+		<button style="translate: 0;" class="btn btn-square btn-ghost absolute top-4 right-6 z-[inherit] transition-none!" @click="toggleSideCart()">
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
 			</svg>
-			if numOfItems > 0 {
-				<span class="badge badge-sm indicator-item">{ numOfItems }</span>
-			}
+		</button>
+		<ul
+			id="sidecart-orders"
+			:style="sideCartOpen && { translate: 0 }"
+			class="menu bg-base-200 text-base-content min-h-full w-96 p-4 pt-12"
+		>
+			@SideCartOrderList()
+		</ul>
+	</div>
+}
+
+templ SideCartOrderList() {
+	// TODO: Not populated since need to return a new side cart html!!
+	for _, item := range dto.CondensedOrders.Orders {
+		@SideOrder(&item)
+	}
+}
+
+templ SideOrder(item *dto.CondensedOrder) {
+	<div style="border: solid;" class="card card-side bg-base-100 shadow-sm h-24 mt-3">
+		<figure class="min-h-[5.75rem] max-h-[5.75rem] min-w-24 max-w-24">
+			<img
+				src={ item.Order.ImgPath }
+				alt={ item.Order.Name }
+			/>
+		</figure>
+		<div class="card-body">
+			<div class="inline-flex">
+				<h2 class="card-title -mt-4">{ item.Order.Name } </h2>
+				<!-- TODO: Add in Deletion action-->
+				<button style="translate: 0;" class="btn btn-square btn-ghost absolute top-1 right-1 z-[inherit] transition-none!">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+						<path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"></path>
+					</svg>
+				</button>
+			</div>
+			<p class="text-sm text-gray-400 -mt-3">{ item.Order.FormatCost() } each</p>
+			<div class="card-actions justify-end">
+				@shared.AdjustQuantity(item.Amount)
+				<span class="inline-flex">
+					<p id="single-order-cost" class="text-md font-bold text-black">{ item.FormatSingleOrderCost() }</p>
+				</span>
+			</div>
 		</div>
 	</div>
 }

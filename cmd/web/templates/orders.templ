@@ -1,7 +1,7 @@
 package web
 
 import . "buckingham_bakery/internal/dto"
-import . "buckingham_bakery/cmd/web/templates/components"
+import "strconv"
 
 templ Orders(orders []FoodOrder) {
 	@Base() {
@@ -11,4 +11,28 @@ templ Orders(orders []FoodOrder) {
 			}
 		</div>
 	}
+}
+
+templ Order(order FoodOrder) {
+	<div class="card card-border bg-base-100 w-80 h-2/4 shadow-sm">
+		<figure class="w-full min-h-56 max-h-56">
+			<img
+				src={ order.ImgPath }
+				alt={ order.Name }
+			/>
+		</figure>
+		<div class="card-body">
+			<h2 class="card-title">{ order.Name }</h2>
+			<p class="text-sm text-gray-500 line-clamp-2">{ order.Description }</p>
+			<div class="card-actions justify-end">
+				{ order.FormatCost() }
+				<button
+					hx-put={ "/cart/" + strconv.Itoa(order.Id) }
+					hx-target="#cart-dropdown"
+					hx-swap="outerHTML"
+					class="btn btn-primary"
+				>Add to Cart</button>
+			</div>
+		</div>
+	</div>
 }

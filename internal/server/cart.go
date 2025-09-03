@@ -28,7 +28,7 @@ func PutCartWebHandler(cartId int, w http.ResponseWriter, r *http.Request) {
 
 	cartOrders.AddToCart(*orderToAdd)
 
-	component := web.Cart()
+	component := web.NavCart()
 
 	HtmxTrigger("update-sidecart", w)
 
