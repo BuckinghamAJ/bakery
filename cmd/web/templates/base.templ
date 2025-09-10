@@ -1,8 +1,14 @@
 package web
 
-import . "buckingham_bakery/cmd/web/templates/components"
+import (
+	"buckingham_bakery/cmd/web/templates/shared"
+	"buckingham_bakery/internal/dto"
+	"strconv"
 
-templ Base() {
+	. "buckingham_bakery/cmd/web/templates/components"
+)
+
+templ Base(cartOrders *dto.ViewCartOrders) {
 	<!DOCTYPE html>
 	<html lang="en" class="h-screen" data-theme="caramellatte">
 		<head>
@@ -11,6 +17,7 @@ templ Base() {
 			<title>Buckingham Backery</title>
 			<link href="assets/css/output.css" rel="stylesheet"/>
 			<script src="assets/js/htmx.min.js"></script>
+			// <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
 			<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 			<script>
   			  document.addEventListener('update-sidecart', (event) => {
@@ -22,14 +29,14 @@ templ Base() {
 			</script>
 		</head>
 		<body x-data="{ sideCartOpen: false, toggleSideCart() { this.sideCartOpen = ! this.sideCartOpen } }">
-			<div class="drawer">
+			<div class="drawer" x-data={ shared.SetAplineData("numOfCartOrders", strconv.Itoa(cartOrders.Quantity)) }>
 				<div class="drawer-content" x-transition>
 					@NavBar()
 					<main class="max-w-screen-lg mx-auto p-4 mt-4">
 						{ children... }
 					</main>
 				</div>
-				@SideCart()
+				@SideCart(cartOrders)
 			</div>
 		</body>
 	</html>

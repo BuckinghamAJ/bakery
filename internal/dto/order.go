@@ -34,10 +34,15 @@ func (co CondensedOrder) FormatSingleOrderCost() string {
 }
 
 type ViewCartOrders struct {
-	Orders map[int]CondensedOrder
+	Orders   map[int]CondensedOrder
+	Quantity int
 }
 
-func (vco ViewCartOrders) calculateTotalCost() float64 {
+func NewCartOrders() *ViewCartOrders {
+	return &ViewCartOrders{Orders: map[int]CondensedOrder{}, Quantity: 0}
+}
+
+func (vco ViewCartOrders) CalculateTotalCost() float64 {
 	var total float64 = 0
 	for _, order := range vco.Orders {
 		total += order.totalSingleOrderCost()
@@ -45,11 +50,25 @@ func (vco ViewCartOrders) calculateTotalCost() float64 {
 	return total
 }
 
-func (vco ViewCartOrders) FormatTotalOrderCost() string {
-	return fmt.Sprintf("$%.2f", vco.calculateTotalCost())
+func (vco *ViewCartOrders) AddToCart(order FoodOrder) {
+	vco.Quantity += 1
+
+	if entry, ok := vco.Orders[order.Id]; ok {
+		entry.Amount += 1
+		vco.Orders[order.Id] = entry
+	} else {
+		vco.Orders[order.Id] = CondensedOrder{
+			Amount: 1,
+			Order:  order,
+		}
+	}
 }
 
-var CondensedOrders = &ViewCartOrders{
+func (vco ViewCartOrders) FormatTotalOrderCost() string {
+	return fmt.Sprintf("$%.2f", vco.CalculateTotalCost())
+}
+
+var CondensedOrders = ViewCartOrders{
 	Orders: map[int]CondensedOrder{},
 }
 
@@ -88,7 +107,7 @@ func (oic OrderInCart) DisplayTotalCost() string {
 	return fmt.Sprintf("$%.2f", oic.calculateTotalCost())
 }
 
-func (oic OrderInCart) Condensed() *ViewCartOrders {
+func (oic OrderInCart) Condensed() ViewCartOrders {
 	for _, order := range oic.Orders {
 		if entry, ok := CondensedOrders.Orders[order.Id]; ok {
 			entry.Amount += 1

@@ -3,8 +3,8 @@ package web
 import . "buckingham_bakery/internal/dto"
 import "strconv"
 
-templ Orders(orders []FoodOrder) {
-	@Base() {
+templ Orders(orders []FoodOrder, cartOrders *ViewCartOrders) {
+	@Base(cartOrders) {
 		<div class="flex flex-wrap gap-4 columns-3 h-full">
 			for _, order := range orders {
 				@Order(order)
@@ -31,6 +31,7 @@ templ Order(order FoodOrder) {
 					hx-target="#cart-dropdown"
 					hx-swap="outerHTML"
 					class="btn btn-primary"
+					@click="numOfCartOrders++"
 				>Add to Cart</button>
 			</div>
 		</div>

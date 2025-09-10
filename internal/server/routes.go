@@ -56,7 +56,11 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.StaticFS("/assets", http.FS(staticFiles))
 
 	r.GET("/", func(c *gin.Context) {
-		templ.Handler(Orders(orders)).ServeHTTP(c.Writer, c.Request)
+		// clearCartFromSession(c.Writer, c.Request)
+
+		cartOrders, _ := getCartFromSession(c.Request)
+
+		templ.Handler(Orders(orders, cartOrders)).ServeHTTP(c.Writer, c.Request)
 	})
 
 	r.GET("/sidecart", func(c *gin.Context) {
